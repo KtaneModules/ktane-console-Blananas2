@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 65631441359223304}
   - component: {fileID: 23933532781579734}
   - component: {fileID: 114929136692211972}
+  - component: {fileID: 114444012288228876}
   m_Layer: 0
   m_Name: Timmy Jr.
   m_TagString: Untagged
@@ -129,6 +130,7 @@ GameObject:
   - component: {fileID: 4752765493389038}
   - component: {fileID: 23572602556435058}
   - component: {fileID: 102015966416891932}
+  - component: {fileID: 114138590015649578}
   m_Layer: 0
   m_Name: Text
   m_TagString: Untagged
@@ -146,6 +148,7 @@ GameObject:
   - component: {fileID: 4303461440655208}
   - component: {fileID: 33346394373228008}
   - component: {fileID: 23579409523729424}
+  - component: {fileID: 114393163283181254}
   m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
@@ -466,7 +469,7 @@ TextMesh:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1814148502882804}
-  m_Text: valve cant count to three
+  m_Text: '> '
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -491,6 +494,19 @@ MonoBehaviour:
   m_Script: {fileID: -381104716, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114138590015649578
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1814148502882804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - GUI/KT 3D Text
 --- !u!114 &114177147728368076
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -519,33 +535,37 @@ MonoBehaviour:
   Audio: {fileID: 114655490272128324}
   ModuleSelectable: {fileID: 114795752672360968}
   AllText: {fileID: 102015966416891932}
-  ordinals:
-  - first
-  - second
-  - third
-  - fourth
-  - fifth
-  - sixth
-  - seventh
-  - eighth
-  - ninth
-  - tenth
-  numbers:
-  - one
-  - two
-  - three
-  - four
-  - five
-  - six
-  - seven
-  - eight
-  - nine
-  - ten
-  objectNames: []
-  firstObject: []
-  secondObject: []
-  randomInts: 
-  objectSelection: []
+  Mats:
+  - {fileID: 2100000, guid: 9046ceb59cf0bc9459f588417eb4b64b, type: 2}
+  - {fileID: 2100000, guid: 06e2cd52a1beaad46a3f42414efc630b, type: 2}
+  - {fileID: 2100000, guid: eb13d7ed7a0ad4d48aa77ef406ca61c6, type: 2}
+  Back: {fileID: 1854106966494040}
+--- !u!114 &114393163283181254
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1854106966494040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - KT/Mobile/DiffuseTint
+--- !u!114 &114444012288228876
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1484510885809090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1005838349, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShaderNames:
+  - Standard
 --- !u!114 &114537458832029804
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -642,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 1702003387, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Parent: {fileID: 0}
+  Parent: {fileID: 114795752672360968}
   Children: []
   IsPassThrough: 0
   ChildRowLength: 0
