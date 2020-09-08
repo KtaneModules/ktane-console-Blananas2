@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using KModkit;
+using System.Text.RegularExpressions;
 
 public class consoleScript : MonoBehaviour {
 
@@ -30,6 +31,8 @@ public class consoleScript : MonoBehaviour {
 	};
     string TheLetters = "<Eqwertyuiopasdfghjklzxcvbnm ";
     private bool focused = false;
+    private bool firstEnter = true;
+    private bool unusable = false;
     private string textOnModule = "";
     string input = "";
     string solveMessage = "";
@@ -156,6 +159,10 @@ public class consoleScript : MonoBehaviour {
 
     void Awake () {
         moduleId = moduleIdCounter++;
+        if (Application.isEditor)
+        {
+            focused = true;
+        }
         ModuleSelectable.OnFocus += delegate () { focused = true; };
         ModuleSelectable.OnDefocus += delegate () { focused = false; };
     }
@@ -552,8 +559,6 @@ public class consoleScript : MonoBehaviour {
         Debug.LogFormat("[The Console #{0}] C) {1} | {2}; {3}", moduleId, theWeaponNames[2], theWeaponScores[2], (theWeaponScores[2] >= theWeaponScores[0] && theWeaponScores[2] >= theWeaponScores[1]) && (theWeaponScores[2] >= theWeaponScores[3] && theWeaponScores[2] >= theWeaponScores[4]) ? "USE" : "do not use");
         Debug.LogFormat("[The Console #{0}] D) {1} | {2}; {3}", moduleId, theWeaponNames[3], theWeaponScores[3], (theWeaponScores[3] >= theWeaponScores[0] && theWeaponScores[3] >= theWeaponScores[1]) && (theWeaponScores[3] >= theWeaponScores[2] && theWeaponScores[3] >= theWeaponScores[4]) ? "USE" : "do not use");
         Debug.LogFormat("[The Console #{0}] E) {1} | {2}; {3}", moduleId, theWeaponNames[4], theWeaponScores[4], (theWeaponScores[4] >= theWeaponScores[0] && theWeaponScores[4] >= theWeaponScores[1]) && (theWeaponScores[4] >= theWeaponScores[2] && theWeaponScores[4] >= theWeaponScores[3]) ? "USE" : "do not use");
-
-        Debug.LogFormat("[The Console #{0}] Actions on the module:", moduleId);
     }
 
 	// Update is called once per frame
@@ -573,7 +578,7 @@ public class consoleScript : MonoBehaviour {
 	}
 
     void handleKey (char c) {
-        if (focused) {
+        if (focused && !unusable) {
         if (input.Length != 23) {
             input = input + c;
         }
@@ -581,7 +586,7 @@ public class consoleScript : MonoBehaviour {
     }
 
     void handleBack () {
-        if (focused) {
+        if (focused && !unusable) {
         if (input.Length != 0) {
             input = input.Substring(0, input.Length - 1);
         }
@@ -589,86 +594,166 @@ public class consoleScript : MonoBehaviour {
     }
 
     void handleEnter () {
-        if (focused) {
-        if (input == "view enemy") {
-            textOnModule = String.Format("Your enemy:\n{0}\n\nINT: {1} IQ\nPWR: {2} N\nDEF: {3} Mohs\nMBL: {4} m/s²\n HP: {5} BAC\nSTL: {6} lm\n\n> $", theEnemy.NAME, theEnemy.INT, theEnemy.PWR, theEnemy.DEF, theEnemy.MBL, theEnemy.HP, theEnemy.STL );
-        } else if (input == "view hero") {
-            textOnModule = String.Format("Your hero:\n{0}\n\nHGT: {1} m\nWGT: {2} kg\nAGE: {3} y\nLDN: {4} db\nRDA: {5} mSv\nORG: ({6}°, {7}°)\n\n> $", theHero.NAME, theHero.HGT, theHero.WGT, theHero.AGE, theHero.LDN, theHero.RDA, theHero.ORG_LAT, theHero.ORG_LONG );
-        } else if (input == "view location") {
-            textOnModule = String.Format("Your location:\n{0}\n\nTMP: {1}° C\nHUM: {2}% RH\nPSI: {3} kPa\nWND: {4}° & {5} km/s²\nPRC: {6} cm\nALT: {7} m\n\n> $", theLocation.NAME, theLocation.TMP, theLocation.HUM, theLocation.PSI, theLocation.WND_DIR, theLocation.WND_SPD, theLocation.PRC, theLocation.ALT );
-        } else if (input == "view items") {
-            textOnModule = String.Format("A) {0}\nB) {1}\nC) {2}\nD) {3}\nE) {4}\nF) {5}\nG) {6}\nH) {7}\nI) {8}\nJ) {9}\n\n> $", theItemNames[0], theItemNames[1], theItemNames[2], theItemNames[3], theItemNames[4], theItemNames[5], theItemNames[6], theItemNames[7], theItemNames[8], theItemNames[9]);
-        } else if (input.StartsWith("use item ")) {
-            switch (input) {
-                case "use item a": if (theItemBools[0] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item A, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[0] = false; theItemNames[0] = theItemNames[0] + "!"; Debug.LogFormat("[The Console #{0}] You used item A, which was correct.", moduleId); } break;
-                case "use item b": if (theItemBools[1] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item B, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[1] = false; theItemNames[1] = theItemNames[1] + "!"; Debug.LogFormat("[The Console #{0}] You used item B, which was correct.", moduleId); } break;
-                case "use item c": if (theItemBools[2] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item C, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[2] = false; theItemNames[2] = theItemNames[2] + "!"; Debug.LogFormat("[The Console #{0}] You used item C, which was correct.", moduleId); } break;
-                case "use item d": if (theItemBools[3] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item D, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[3] = false; theItemNames[3] = theItemNames[3] + "!"; Debug.LogFormat("[The Console #{0}] You used item D, which was correct.", moduleId); } break;
-                case "use item e": if (theItemBools[4] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item E, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[4] = false; theItemNames[4] = theItemNames[4] + "!"; Debug.LogFormat("[The Console #{0}] You used item E, which was correct.", moduleId); } break;
-                case "use item f": if (theItemBools[5] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item F, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[5] = false; theItemNames[5] = theItemNames[5] + "!"; Debug.LogFormat("[The Console #{0}] You used item F, which was correct.", moduleId); } break;
-                case "use item g": if (theItemBools[6] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item G, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[6] = false; theItemNames[6] = theItemNames[6] + "!"; Debug.LogFormat("[The Console #{0}] You used item G, which was correct.", moduleId); } break;
-                case "use item h": if (theItemBools[7] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item H, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[7] = false; theItemNames[7] = theItemNames[7] + "!"; Debug.LogFormat("[The Console #{0}] You used item H, which was correct.", moduleId); } break;
-                case "use item i": if (theItemBools[8] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item I, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[8] = false; theItemNames[8] = theItemNames[8] + "!"; Debug.LogFormat("[The Console #{0}] You used item I, which was correct.", moduleId); } break;
-                case "use item j": if (theItemBools[9] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item J, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[9] = false; theItemNames[9] = theItemNames[9] + "!"; Debug.LogFormat("[The Console #{0}] You used item J, which was correct.", moduleId); } break;
-                default: Debug.Log("y'houre fool"); break;
+        if (focused && !unusable) {
+            if (input == "use motivate") {
+                Audio.PlaySoundAtTransform("YouAreGreat", transform);
+            } else if (input == "use technology") {
+                Audio.PlaySoundAtTransform("DUH", transform);
+            } else if (input == "use evil jingle") {
+                Audio.PlaySoundAtTransform("EvilJingle", transform);
+            } else if (input == "execute swan") {
+                StartCoroutine(SystemFail());
+                StartCoroutine(FailText());
+            } else if (input == "view answer" || input == "view solution") {
+                string[] texts = new string[] { "Oh you're that desperate\nhuh?", "I don't think so!", "Why would I give this to\nyou?", "You need to be SuperUser\nto access this command!", "Go to page 6 of the\nmanual", "Error: No way" };
+                int index = UnityEngine.Random.Range(0, texts.Length);
+                while (textOnModule.StartsWith(texts[index]))
+                    index = UnityEngine.Random.Range(0, texts.Length);
+                textOnModule = texts[index]+"\n\n\n\n\n> $";
+            } else if (input == "superuser" || input == "admin") {
+                string[] texts = new string[] { "Oh so your trying to get\nit here now?", "Is this even the right\nplace for this?", "Ah sure thi- Hey you're\nnot Mr. Nut!", "Only the chosen one may\nreceive these privileges!" };
+                int index = UnityEngine.Random.Range(0, texts.Length);
+                while (textOnModule.StartsWith(texts[index]))
+                    index = UnityEngine.Random.Range(0, texts.Length);
+                textOnModule = texts[index] + "\n\n\n\n\n> $";
+            } else if (input == "view enemy") {
+                FirstActionLog();
+                textOnModule = String.Format("Your enemy:\n{0}\n\nINT: {1} IQ\nPWR: {2} N\nDEF: {3} Mohs\nMBL: {4} m/s²\n HP: {5} BAC\nSTL: {6} lm\n\n> $", theEnemy.NAME, theEnemy.INT, theEnemy.PWR, theEnemy.DEF, theEnemy.MBL, theEnemy.HP, theEnemy.STL );
+            } else if (input == "view hero") {
+                FirstActionLog();
+                textOnModule = String.Format("Your hero:\n{0}\n\nHGT: {1} m\nWGT: {2} kg\nAGE: {3} y\nLDN: {4} db\nRDA: {5} mSv\nORG: ({6}°, {7}°)\n\n> $", theHero.NAME, theHero.HGT, theHero.WGT, theHero.AGE, theHero.LDN, theHero.RDA, theHero.ORG_LAT, theHero.ORG_LONG );
+            } else if (input == "view location") {
+                FirstActionLog();
+                textOnModule = String.Format("Your location:\n{0}\n\nTMP: {1}° C\nHUM: {2}% RH\nPSI: {3} kPa\nWND: {4}° & {5} km/s²\nPRC: {6} cm\nALT: {7} m\n\n> $", theLocation.NAME, theLocation.TMP, theLocation.HUM, theLocation.PSI, theLocation.WND_DIR, theLocation.WND_SPD, theLocation.PRC, theLocation.ALT );
+            } else if (input == "view items") {
+                FirstActionLog();
+                textOnModule = String.Format("A) {0}\nB) {1}\nC) {2}\nD) {3}\nE) {4}\nF) {5}\nG) {6}\nH) {7}\nI) {8}\nJ) {9}\n\n> $", theItemNames[0], theItemNames[1], theItemNames[2], theItemNames[3], theItemNames[4], theItemNames[5], theItemNames[6], theItemNames[7], theItemNames[8], theItemNames[9]);
+            } else if (input.StartsWith("use item ")) {
+                switch (input) {
+                    case "use item a": FirstActionLog(); if (theItemBools[0] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item A, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[0] = false; theItemNames[0] = theItemNames[0] + "!"; Debug.LogFormat("[The Console #{0}] You used item A, which was correct.", moduleId); } break;
+                    case "use item b": FirstActionLog(); if (theItemBools[1] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item B, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[1] = false; theItemNames[1] = theItemNames[1] + "!"; Debug.LogFormat("[The Console #{0}] You used item B, which was correct.", moduleId); } break;
+                    case "use item c": FirstActionLog(); if (theItemBools[2] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item C, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[2] = false; theItemNames[2] = theItemNames[2] + "!"; Debug.LogFormat("[The Console #{0}] You used item C, which was correct.", moduleId); } break;
+                    case "use item d": FirstActionLog(); if (theItemBools[3] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item D, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[3] = false; theItemNames[3] = theItemNames[3] + "!"; Debug.LogFormat("[The Console #{0}] You used item D, which was correct.", moduleId); } break;
+                    case "use item e": FirstActionLog(); if (theItemBools[4] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item E, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[4] = false; theItemNames[4] = theItemNames[4] + "!"; Debug.LogFormat("[The Console #{0}] You used item E, which was correct.", moduleId); } break;
+                    case "use item f": FirstActionLog(); if (theItemBools[5] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item F, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[5] = false; theItemNames[5] = theItemNames[5] + "!"; Debug.LogFormat("[The Console #{0}] You used item F, which was correct.", moduleId); } break;
+                    case "use item g": FirstActionLog(); if (theItemBools[6] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item G, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[6] = false; theItemNames[6] = theItemNames[6] + "!"; Debug.LogFormat("[The Console #{0}] You used item G, which was correct.", moduleId); } break;
+                    case "use item h": FirstActionLog(); if (theItemBools[7] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item H, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[7] = false; theItemNames[7] = theItemNames[7] + "!"; Debug.LogFormat("[The Console #{0}] You used item H, which was correct.", moduleId); } break;
+                    case "use item i": FirstActionLog(); if (theItemBools[8] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item I, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[8] = false; theItemNames[8] = theItemNames[8] + "!"; Debug.LogFormat("[The Console #{0}] You used item I, which was correct.", moduleId); } break;
+                    case "use item j": FirstActionLog(); if (theItemBools[9] == false) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used item J, which was incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else { theItemBools[9] = false; theItemNames[9] = theItemNames[9] + "!"; Debug.LogFormat("[The Console #{0}] You used item J, which was correct.", moduleId); } break;
+                    default: Debug.Log("y'houre fool"); break;
+                }
+                textOnModule = String.Format("A) {0}\nB) {1}\nC) {2}\nD) {3}\nE) {4}\nF) {5}\nG) {6}\nH) {7}\nI) {8}\nJ) {9}\n\n> $", theItemNames[0], theItemNames[1], theItemNames[2], theItemNames[3], theItemNames[4], theItemNames[5], theItemNames[6], theItemNames[7], theItemNames[8], theItemNames[9]);
+            } else if (input == "view weapons") {
+                FirstActionLog();
+                textOnModule = String.Format("A) {0}\nB) {1}\nC) {2}\nD) {3}\nE) {4}\n\n\n\n\n\n\n> $", theWeaponNames[0], theWeaponNames[1], theWeaponNames[2], theWeaponNames[3], theWeaponNames[4]);
+            } else if (input.StartsWith("use weapon ")) {
+                isItGood = true;
+                for (int i = 0; i < 10; i++) {
+                    if (theItemBools[i] == true) {
+                        isItGood = false;
+                    }
+                }
+                switch (input) {
+                    case "use weapon a": FirstActionLog(); if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon A, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
+                        if ((theWeaponScores[0] >= theWeaponScores[1] && theWeaponScores[0] >= theWeaponScores[2]) && (theWeaponScores[0] >= theWeaponScores[3] && theWeaponScores[0] >= theWeaponScores[4])) {
+                            GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon A, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[0]; StartCoroutine(SolveAnim());
+                        } else {
+                            GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon A, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
+                        }
+                    }
+                    break;
+                    case "use weapon b": FirstActionLog(); if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon B, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
+                        if ((theWeaponScores[1] >= theWeaponScores[0] && theWeaponScores[1] >= theWeaponScores[2]) && (theWeaponScores[1] >= theWeaponScores[3] && theWeaponScores[1] >= theWeaponScores[4])) {
+                            GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon B, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[1]; StartCoroutine(SolveAnim());
+                        } else {
+                            GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon B, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
+                        }
+                    }
+                    break;
+                    case "use weapon c": FirstActionLog(); if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon C, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
+                        if ((theWeaponScores[2] >= theWeaponScores[0] && theWeaponScores[2] >= theWeaponScores[1]) && (theWeaponScores[2] >= theWeaponScores[3] && theWeaponScores[2] >= theWeaponScores[4])) {
+                            GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon C, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[2]; StartCoroutine(SolveAnim());
+                        } else {
+                            GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon C, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
+                        }
+                    }
+                    break;
+                    case "use weapon d": FirstActionLog(); if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon D, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
+                        if ((theWeaponScores[3] >= theWeaponScores[0] && theWeaponScores[3] >= theWeaponScores[1]) && (theWeaponScores[3] >= theWeaponScores[2] && theWeaponScores[3] >= theWeaponScores[4])) {
+                            GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon D, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[3]; StartCoroutine(SolveAnim());
+                        } else {
+                            GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon D, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
+                        }
+                    }
+                    break;
+                    case "use weapon e": FirstActionLog(); if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon E, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
+                        if ((theWeaponScores[4] >= theWeaponScores[0] && theWeaponScores[4] >= theWeaponScores[1]) && (theWeaponScores[4] >= theWeaponScores[2] && theWeaponScores[4] >= theWeaponScores[3])) {
+                            GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon E, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[4]; StartCoroutine(SolveAnim());
+                        } else {
+                            GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon E, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
+                        }
+                    }
+                    break;
+                }
             }
-            textOnModule = String.Format("A) {0}\nB) {1}\nC) {2}\nD) {3}\nE) {4}\nF) {5}\nG) {6}\nH) {7}\nI) {8}\nJ) {9}\n\n> $", theItemNames[0], theItemNames[1], theItemNames[2], theItemNames[3], theItemNames[4], theItemNames[5], theItemNames[6], theItemNames[7], theItemNames[8], theItemNames[9]);
-        } else if (input == "view weapons") {
-            textOnModule = String.Format("A) {0}\nB) {1}\nC) {2}\nD) {3}\nE) {4}\n\n\n\n\n\n\n> $", theWeaponNames[0], theWeaponNames[1], theWeaponNames[2], theWeaponNames[3], theWeaponNames[4]);
-        } else if (input.StartsWith("use weapon ")) {
-            isItGood = true;
-            for (int i = 0; i < 10; i++) {
-                if (theItemBools[i] == true) {
-                    isItGood = false;
-                }
-            }
-            switch (input) {
-                case "use weapon a": if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon A, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
-                    if ((theWeaponScores[0] >= theWeaponScores[1] && theWeaponScores[0] >= theWeaponScores[2]) && (theWeaponScores[0] >= theWeaponScores[3] && theWeaponScores[0] >= theWeaponScores[4])) {
-                        GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon A, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[0]; StartCoroutine(SolveAnim());
-                    } else {
-                        GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon A, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
-                    }
-                }
-                break;
-                case "use weapon b": if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon B, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
-                    if ((theWeaponScores[0] >= theWeaponScores[2] && theWeaponScores[1] >= theWeaponScores[2]) && (theWeaponScores[1] >= theWeaponScores[3] && theWeaponScores[1] >= theWeaponScores[4])) {
-                        GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon B, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[1]; StartCoroutine(SolveAnim());
-                    } else {
-                        GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon B, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
-                    }
-                }
-                break;
-                case "use weapon c": if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon C, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
-                    if ((theWeaponScores[2] >= theWeaponScores[0] && theWeaponScores[2] >= theWeaponScores[1]) && (theWeaponScores[2] >= theWeaponScores[3] && theWeaponScores[2] >= theWeaponScores[4])) {
-                        GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon C, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[2]; StartCoroutine(SolveAnim());
-                    } else {
-                        GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon C, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
-                    }
-                }
-                break;
-                case "use weapon d": if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon D, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
-                    if ((theWeaponScores[3] >= theWeaponScores[0] && theWeaponScores[3] >= theWeaponScores[1]) && (theWeaponScores[3] >= theWeaponScores[2] && theWeaponScores[3] >= theWeaponScores[4])) {
-                        GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon D, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[3]; StartCoroutine(SolveAnim());
-                    } else {
-                        GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon D, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
-                    }
-                }
-                break;
-                case "use weapon e": if (!isItGood) { GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon E, but you haven't used all the correct items. Strike!", moduleId); StartCoroutine(StrikeAnim()); } else {
-                    if ((theWeaponScores[4] >= theWeaponScores[0] && theWeaponScores[4] >= theWeaponScores[1]) && (theWeaponScores[4] >= theWeaponScores[2] && theWeaponScores[4] >= theWeaponScores[3])) {
-                        GetComponent<KMBombModule>().HandlePass(); Debug.LogFormat("[The Console #{0}] You used weapon E, which is correct. Module solved!", moduleId); correctWeapon = theWeaponNames[4]; StartCoroutine(SolveAnim());
-                    } else {
-                        GetComponent<KMBombModule>().HandleStrike(); Debug.LogFormat("[The Console #{0}] You used weapon E, which is incorrect. Strike!", moduleId); StartCoroutine(StrikeAnim());
-                    }
-                }
-                break;
-            }
+            input = "";
         }
-        input = "";
-    }
     }
 
+    void FirstActionLog()
+    {
+        if (firstEnter)
+        {
+            firstEnter = false;
+            Debug.LogFormat("[The Console #{0}] Actions on the module:", moduleId);
+        }
+    }
+
+
+    IEnumerator SystemFail()
+    {
+        unusable = true;
+        Audio.PlaySoundAtTransform("SystemFailure", transform);
+        float t = 0f;
+        bool showmat = true;
+        while (t < 10f)
+        {
+            if (showmat)
+            {
+                showmat = false;
+                Back.GetComponent<MeshRenderer>().material = Mats[1];
+            }
+            else
+            {
+                showmat = true;
+                Back.GetComponent<MeshRenderer>().material = Mats[0];
+            }
+            t += 0.455f;
+            yield return new WaitForSecondsRealtime(0.5f);
+        }
+        Back.GetComponent<MeshRenderer>().material = Mats[0];
+        textOnModule = "> $";
+        unusable = false;
+    }
+
+    IEnumerator FailText()
+    {
+        char[] swan = new char[] { 'S', 'Y', 'S', 'T', 'E', 'M', ' ', 'F', 'A', 'I', 'L', 'U', 'R', 'E' };
+        float t = 0f;
+        int count = -1;
+        while (t < 10f)
+        {
+            if (count != -1)
+                textOnModule += swan[count];
+            else
+                textOnModule = "";
+            count++;
+            if (count > 13)
+                count = -1;
+            t += 0.05f;
+            yield return new WaitForSecondsRealtime(0.05f);
+        }
+    }
 
     IEnumerator StrikeAnim () {
         Back.GetComponent<MeshRenderer>().material = Mats[1];
@@ -684,5 +769,100 @@ public class consoleScript : MonoBehaviour {
             textOnModule = textOnModule += solveMessage[i];
             yield return new WaitForSeconds(0.05f);
         }
+    }
+
+    //twitch plays
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} type <cmd> [Types 'cmd' into the command line] | !{0} enter [Enters what is in the command line] | !{0} clear [Clears what is in the command line]";
+    #pragma warning restore 414
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        if (unusable)
+        {
+            yield return null;
+            yield break;
+        }
+        if (Regex.IsMatch(command, @"^\s*enter\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            handleEnter();
+            yield break;
+        }
+        if (Regex.IsMatch(command, @"^\s*clear\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            while (input != "") { handleBack(); yield return new WaitForSeconds(0.1f); };
+            yield break;
+        }
+        string[] parameters = command.Split(' ');
+        if (Regex.IsMatch(parameters[0], @"^\s*type\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            if (parameters.Length == 1)
+            {
+                yield return "sendtochaterror Please specify what to type into the command line!";
+            }
+            else
+            {
+                for (int i = 1; i < parameters.Length; i++)
+                {
+                    if (!Regex.IsMatch(parameters[i], @"[A-Z]", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+                    {
+                        for (int j = 0; j < parameters[i].Length; j++)
+                        {
+                            if (!Regex.IsMatch(parameters[i][j].ToString(), @"[A-Z]", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+                            {
+                                yield return "sendtochaterror The specified character '" + parameters[i][j] + "' is invalid!";
+                                yield break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        parameters[i] = parameters[i].ToLower();
+                    }
+                }
+                for (int i = 1; i < parameters.Length; i++)
+                {
+                    for (int j = 0; j < parameters[i].Length; j++)
+                    {
+                        handleKey(parameters[i][j]);
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                    if (i != parameters.Length - 1)
+                    {
+                        handleKey(' '); 
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                }
+            }
+            yield break;
+        }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        while (unusable) { yield return true; yield return new WaitForSeconds(0.1f); };
+        if (input != "")
+            yield return ProcessTwitchCommand("clear");
+        char[] letters = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' };
+        for (int i = 0; i < 10; i++)
+        {
+            if (theItemBools[i] == true)
+            {
+                yield return ProcessTwitchCommand("type use item " + letters[i]);
+                yield return ProcessTwitchCommand("enter");
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+        float high = theWeaponScores.Max();
+        List<int> indexes = new List<int>();
+        for (int i = 0; i < 5; i++)
+        {
+            if (theWeaponScores[i] == high)
+                indexes.Add(i);
+        }
+        yield return ProcessTwitchCommand("type use weapon " + letters[indexes[UnityEngine.Random.Range(0, indexes.Count)]]);
+        yield return ProcessTwitchCommand("enter");
     }
 }
