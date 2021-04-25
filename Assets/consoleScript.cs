@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using KModkit;
 using System.Text.RegularExpressions;
 
 public class consoleScript : MonoBehaviour {
@@ -15,6 +14,7 @@ public class consoleScript : MonoBehaviour {
 
     public Material[] Mats;
     public GameObject Back;
+    public GameObject StatusLight;
 
     //Logging
     static int moduleIdCounter = 1;
@@ -33,7 +33,9 @@ public class consoleScript : MonoBehaviour {
     private bool focused = false;
     private bool firstEnter = true;
     private bool unusable = false;
+    private bool autosolve = false;
     private string textOnModule = "";
+    private Coroutine swanfail;
     string input = "";
     string solveMessage = "";
 
@@ -169,6 +171,7 @@ public class consoleScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        StatusLight.SetActive(false);     //Comment out to test TP in TestHarness
         textOnModule = "> $";
 
         Enemy enemy0 = new Enemy("Def", 905, 90000000, 11, 0, 1.2f, 20000000000);
@@ -578,7 +581,7 @@ public class consoleScript : MonoBehaviour {
 	}
 
     void handleKey (char c) {
-        if (focused && !unusable) {
+        if ((focused || autosolve) && !unusable) {
         if (input.Length != 23) {
             input = input + c;
         }
@@ -586,7 +589,7 @@ public class consoleScript : MonoBehaviour {
     }
 
     void handleBack () {
-        if (focused && !unusable) {
+        if ((focused || autosolve) && !unusable) {
         if (input.Length != 0) {
             input = input.Substring(0, input.Length - 1);
         }
@@ -594,8 +597,10 @@ public class consoleScript : MonoBehaviour {
     }
 
     void handleEnter () {
-        if (focused && !unusable) {
-            if (input == "use motivate") {
+        if ((focused || autosolve) && !unusable) {
+            if (input == "use scrumpy") {
+                Audio.PlaySoundAtTransform("drunkman", transform);
+            } else if (input == "use motivate") {
                 Audio.PlaySoundAtTransform("YouAreGreat", transform);
             } else if (input == "use technology") {
                 Audio.PlaySoundAtTransform("DUH", transform);
@@ -603,7 +608,7 @@ public class consoleScript : MonoBehaviour {
                 Audio.PlaySoundAtTransform("EvilJingle", transform);
             } else if (input == "execute swan") {
                 StartCoroutine(SystemFail());
-                StartCoroutine(FailText());
+                swanfail = StartCoroutine(FailText());
             } else if (input == "view answer" || input == "view solution") {
                 string[] texts = new string[] { "Oh you're that desperate\nhuh?", "I don't think so!", "Why would I give this to\nyou?", "You need to be SuperUser\nto access this command!", "Go to page 6 of the\nmanual", "Error: No way" };
                 int index = UnityEngine.Random.Range(0, texts.Length);
@@ -731,8 +736,23 @@ public class consoleScript : MonoBehaviour {
             t += 0.455f;
             yield return new WaitForSecondsRealtime(0.5f);
         }
-        Back.GetComponent<MeshRenderer>().material = Mats[0];
-        textOnModule = "> $";
+        if (swanfail != null)
+        {
+            StopCoroutine(swanfail);
+            swanfail = null;
+        }
+        if (moduleSolved)
+        {
+            Back.GetComponent<MeshRenderer>().material = Mats[2];
+            textOnModule = "";
+            for (int i = 0; i < solveMessage.Length; i++)
+                textOnModule = textOnModule += solveMessage[i];
+        }
+        else
+        {
+            Back.GetComponent<MeshRenderer>().material = Mats[0];
+            textOnModule = "> $";
+        }
         unusable = false;
     }
 
@@ -753,6 +773,7 @@ public class consoleScript : MonoBehaviour {
             t += 0.05f;
             yield return new WaitForSecondsRealtime(0.05f);
         }
+        swanfail = null;
     }
 
     IEnumerator StrikeAnim () {
@@ -762,6 +783,7 @@ public class consoleScript : MonoBehaviour {
     }
 
     IEnumerator SolveAnim () {
+        moduleSolved = true;
         Back.GetComponent<MeshRenderer>().material = Mats[2];
         textOnModule = "";
         solveMessage = String.Format("{0}\ndefeated\n{1}\nwith\n{2}\nin\n{3}\n\n> $", theHero.NAME, theEnemy.NAME, correctWeapon, theLocation.NAME);
@@ -812,7 +834,7 @@ public class consoleScript : MonoBehaviour {
                         {
                             if (!Regex.IsMatch(parameters[i][j].ToString(), @"[A-Z]", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
                             {
-                                yield return "sendtochaterror The specified character '" + parameters[i][j] + "' is invalid!";
+                                yield return "sendtochaterror!f The specified character '" + parameters[i][j] + "' is invalid!";
                                 yield break;
                             }
                         }
@@ -842,7 +864,8 @@ public class consoleScript : MonoBehaviour {
 
     IEnumerator TwitchHandleForcedSolve()
     {
-        while (unusable) { yield return true; yield return new WaitForSeconds(0.1f); };
+        autosolve = true;
+        while (unusable) { yield return true; };
         if (input != "")
             yield return ProcessTwitchCommand("clear");
         char[] letters = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j' };
@@ -864,5 +887,6 @@ public class consoleScript : MonoBehaviour {
         }
         yield return ProcessTwitchCommand("type use weapon " + letters[indexes[UnityEngine.Random.Range(0, indexes.Count)]]);
         yield return ProcessTwitchCommand("enter");
+        autosolve = false;
     }
 }
