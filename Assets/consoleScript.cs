@@ -360,7 +360,7 @@ public class consoleScript : MonoBehaviour {
         if (theHero.AGE < 18 || theHero.AGE > 100) { itemBools.Add(true); } else { itemBools.Add(false); } //Time Machine
         if (theHero.LDN < 80) { itemBools.Add(true); } else { itemBools.Add(false); } //Megaphone
         if (theHero.RDA > 15) { itemBools.Add(true); } else { itemBools.Add(false); } //Geiger Counter
-        if ((theHero.ORG_LAT > 25 && theHero.ORG_LAT < 45) && (theHero.ORG_LONG > -19 && theHero.ORG_LONG < -37)) { itemBools.Add(true); } else { itemBools.Add(false); } //Bald Eagle
+        if ((theHero.ORG_LAT > 25 && theHero.ORG_LAT < 45) && (theHero.ORG_LONG > -37 && theHero.ORG_LONG < -19)) { itemBools.Add(true); } else { itemBools.Add(false); } //Bald Eagle
         if (theEnemy.INT < 70) { itemBools.Add(true); } else { itemBools.Add(false); } //Dunce Cap
         if (theEnemy.PWR < 500) { itemBools.Add(true); } else { itemBools.Add(false); } //Stop Sign
         if (theEnemy.DEF > 6) { itemBools.Add(true); } else { itemBools.Add(false); } //Power Glove
@@ -621,6 +621,8 @@ public class consoleScript : MonoBehaviour {
                 while (textOnModule.StartsWith(texts[index]))
                     index = UnityEngine.Random.Range(0, texts.Length);
                 textOnModule = texts[index] + "\n\n\n\n\n> $";
+			} else if (input == "version") {
+				textOnModule = "You are on Build 1.3.3\n> $";
             } else if (input == "view enemy") {
                 FirstActionLog();
                 textOnModule = String.Format("Your enemy:\n{0}\n\nINT: {1} IQ\nPWR: {2} N\nDEF: {3} Mohs\nMBL: {4} m/s²\n HP: {5} BAC\nSTL: {6} lm\n\n> $", theEnemy.NAME, theEnemy.INT, theEnemy.PWR, theEnemy.DEF, theEnemy.MBL, theEnemy.HP, theEnemy.STL );
