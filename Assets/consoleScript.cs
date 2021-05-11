@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -256,9 +256,9 @@ public class consoleScript : MonoBehaviour {
         Hero hero18 = new Hero("Y'darn kids", 1.52f, 59, 100, 30, 5, -25.3f, -133.8f);
         Hero hero19 = new Hero("BIG BIRD", 2, 101, 51, 60, 2, 123, 456);
         Hero hero20 = new Hero("wee woo wee woo", 65, 555, 2, 200, 200000, nINF, nINF);
-        Hero hero21 = new Hero("hi", 1.55f, 54, 18, 15, 1, 32.2f, -82.9f);
+        Hero hero21 = new Hero("hi", 1.55f, 54, 19, 15, 1, 32.2f, -82.9f);
         Hero hero22 = new Hero("Skai", 1.65f, 55, 22, 101, 161, 54.1f, -2.5f);
-        Hero hero23 = new Hero("Uncle Sam", 2, 80, 208, 7.4f, 1776, 38.9f, -77);
+        Hero hero23 = new Hero("Uncle Sam", 2, 80, 208, 7.4f, 1776, 38.9f, -27.7f);
         Hero hero24 = new Hero("dQw4w9WgXcQ", 1.77f, 58, 54, 84, 49, 55.4f, -1.2f);
         Hero hero25 = new Hero("HOW", INF, INF, INF, INF, INF, INF, INF);
 
@@ -351,31 +351,31 @@ public class consoleScript : MonoBehaviour {
             default: Debug.Log("Anus"); break;
         }
 
-        if (theEnemy.STL < 100) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theHero.LDN > 80) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.STL > 20 && theEnemy.STL < 10000) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theHero.AGE < 18 && theHero.WGT > 203) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theHero.HGT < 2) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theHero.WGT < 70) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theHero.AGE < 18 || theHero.AGE > 100) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theHero.LDN < 80) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theHero.RDA > 15) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if ((theHero.ORG_LAT > 25 && theHero.ORG_LAT < 45) && (theHero.ORG_LONG > -19 && theHero.ORG_LONG < -37)) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.INT < 70) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.PWR < 500) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.DEF > 6) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.MBL > 6) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.HP >= 0.06f) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.STL > 10000) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.TMP > 38) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.HUM > 40) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.PSI < 15) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.WND_SPD < 20) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.PRC > 75) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.ALT < 100) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theEnemy.INT < 100 && 50 < theEnemy.INT) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.PRC == 0) { itemBools.Add(true); } else { itemBools.Add(false); }
-        if (theLocation.WND_DIR % 45 == 0) { itemBools.Add(true); } else { itemBools.Add(false); }
+        if (theEnemy.STL < 100) { itemBools.Add(true); } else { itemBools.Add(false); } //3D Glasses
+        if (theHero.LDN > 80) { itemBools.Add(true); } else { itemBools.Add(false); } //Server Mute
+        if (theEnemy.STL > 200 && theEnemy.STL < 10000) { itemBools.Add(true); } else { itemBools.Add(false); } //Eggalyzer
+        if (theHero.AGE < 18 && theHero.WGT > 203) { itemBools.Add(true); } else { itemBools.Add(false); } //Quantum Crack
+        if (theHero.HGT < 2) { itemBools.Add(true); } else { itemBools.Add(false); } //Stepstool
+        if (theHero.WGT < 70) { itemBools.Add(true); } else { itemBools.Add(false); } //Dumbbell
+        if (theHero.AGE < 18 || theHero.AGE > 100) { itemBools.Add(true); } else { itemBools.Add(false); } //Time Machine
+        if (theHero.LDN < 80) { itemBools.Add(true); } else { itemBools.Add(false); } //Megaphone
+        if (theHero.RDA > 15) { itemBools.Add(true); } else { itemBools.Add(false); } //Geiger Counter
+        if ((theHero.ORG_LAT > 25 && theHero.ORG_LAT < 45) && (theHero.ORG_LONG > -19 && theHero.ORG_LONG < -37)) { itemBools.Add(true); } else { itemBools.Add(false); } //Bald Eagle
+        if (theEnemy.INT < 70) { itemBools.Add(true); } else { itemBools.Add(false); } //Dunce Cap
+        if (theEnemy.PWR < 500) { itemBools.Add(true); } else { itemBools.Add(false); } //Stop Sign
+        if (theEnemy.DEF > 6) { itemBools.Add(true); } else { itemBools.Add(false); } //Power Glove
+        if (theEnemy.MBL > 6) { itemBools.Add(true); } else { itemBools.Add(false); } //Stun Gun
+        if (theEnemy.HP >= 0.06f) { itemBools.Add(true); } else { itemBools.Add(false); } //Breathalyzer
+        if (theEnemy.STL > 10000) { itemBools.Add(true); } else { itemBools.Add(false); } //Sunglasses
+        if (theLocation.TMP > 38) { itemBools.Add(true); } else { itemBools.Add(false); } //Hand Warmers
+        if (theLocation.HUM > 40) { itemBools.Add(true); } else { itemBools.Add(false); } //Dehumidifier
+        if (theLocation.PSI < 15) { itemBools.Add(true); } else { itemBools.Add(false); } //Bike Pump
+        if (theLocation.WND_SPD < 20) { itemBools.Add(true); } else { itemBools.Add(false); } //Fan
+        if (theLocation.PRC > 75) { itemBools.Add(true); } else { itemBools.Add(false); } //Umbrella
+        if (theLocation.ALT < 100) { itemBools.Add(true); } else { itemBools.Add(false); } //Springboard
+        if (theEnemy.INT < 100 && 50 < theEnemy.INT) { itemBools.Add(true); } else { itemBools.Add(false); } //Elmo
+        if (theLocation.PSI == 0) { itemBools.Add(true); } else { itemBools.Add(false); } //2 of Spades
+        if (theLocation.WND_DIR % 45 == 0) { itemBools.Add(true); } else { itemBools.Add(false); } //Robin's Movie Ticket
 
         Item item0 = new Item("3D Glasses", itemBools[0]);
         Item item1 = new Item("Server Mute", itemBools[1]);
@@ -436,31 +436,31 @@ public class consoleScript : MonoBehaviour {
         }
 
 
-        if (theEnemy.NAME.Contains("Spider")) { currentWeaponScore = 69; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theLocation.WND_SPD + 2; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        if (theHero.WGT < 1) { currentWeaponScore = 85; } if (theLocation.ALT < 0) { currentWeaponScore += 31; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        if (theEnemy.DEF <= 3) { currentWeaponScore = 61; } if (theLocation.TMP > 10) { currentWeaponScore += 65; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        if (theHero.LDN >= 70) { currentWeaponScore = 21; } if (theEnemy.HP >= 0.1f) { currentWeaponScore += 99; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        if (theHero.RDA > 99) { currentWeaponScore = 67; } if (theHero.ORG_LONG < 0) { currentWeaponScore += 54; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        if (theHero.WGT < 60) { currentWeaponScore = 47; } if (theHero.ORG_LAT < 0) { currentWeaponScore += 81; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = 100 - theLocation.TMP; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = 25 * theEnemy.NAME.Count(Char.IsWhiteSpace); weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        if (theEnemy.NAME == "stick bug lol") { currentWeaponScore = 50; } if (theHero.NAME == "HOW") { currentWeaponScore += 50; } if (theLocation.NAME == "place go brrrr") { currentWeaponScore += 50; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theHero.ORG_LAT + theHero.ORG_LONG; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = 100 * theEnemy.HP; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = 10 * theHero.HGT; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theLocation.PRC; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        for (int i = 0; i < theLocation.NAME.Length; i++) { if (Char.ToLower(theLocation.NAME[i])  == 'a' || Char.ToLower(theLocation.NAME[i]) == 'e' || Char.ToLower(theLocation.NAME[i]) == 'i' || Char.ToLower(theLocation.NAME[i]) == 'o' || Char.ToLower(theLocation.NAME[i]) == 'u') { currentWeaponScore += 10; }} weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theHero.AGE * theHero.HGT; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theHero.HGT + theHero.WGT + theHero.AGE + theHero.LDN + theHero.RDA; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theHero.NAME.Length * 7; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theEnemy.INT + theEnemy.PWR + theEnemy.DEF + theEnemy.MBL + theEnemy.HP + theEnemy.STL; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        for (int i = 0; i < theEnemy.NAME.Length; i++) { if (Char.ToLower(theEnemy.NAME[i])  == 'a' || Char.ToLower(theEnemy.NAME[i]) == 'b' || Char.ToLower(theEnemy.NAME[i]) == 'c' || Char.ToLower(theEnemy.NAME[i]) == 'd' || Char.ToLower(theEnemy.NAME[i]) == 'e' || Char.ToLower(theEnemy.NAME[i]) == 'f' || Char.ToLower(theEnemy.NAME[i]) == 'g' || Char.ToLower(theEnemy.NAME[i]) == 'h' || Char.ToLower(theEnemy.NAME[i]) == 'i' || Char.ToLower(theEnemy.NAME[i]) == 'j' || Char.ToLower(theEnemy.NAME[i]) == 'k' || Char.ToLower(theEnemy.NAME[i]) == 'l' || Char.ToLower(theEnemy.NAME[i]) == 'm' || Char.ToLower(theEnemy.NAME[i]) == 'n' || Char.ToLower(theEnemy.NAME[i]) == 'o' || Char.ToLower(theEnemy.NAME[i]) == 'p' || Char.ToLower(theEnemy.NAME[i]) == 'q' || Char.ToLower(theEnemy.NAME[i]) == 'r' || Char.ToLower(theEnemy.NAME[i]) == 's' || Char.ToLower(theEnemy.NAME[i]) == 't' || Char.ToLower(theEnemy.NAME[i]) == 'u' || Char.ToLower(theEnemy.NAME[i]) == 'v' || Char.ToLower(theEnemy.NAME[i]) == 'w' || Char.ToLower(theEnemy.NAME[i]) == 'x' || Char.ToLower(theEnemy.NAME[i]) == 'y' || Char.ToLower(theEnemy.NAME[i]) == 'z') { currentWeaponScore += 5; }} weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theEnemy.DEF * 25; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        if (theEnemy.STL < 10) { currentWeaponScore = 89; } if (theEnemy.STL > 1000) { currentWeaponScore = 121; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theLocation.ALT - theLocation.HUM; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theHero.AGE - 87; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
-        currentWeaponScore = theLocation.TMP + theLocation.HUM + theLocation.PSI + theLocation.WND_DIR + theLocation.WND_SPD + theLocation.PRC + theLocation.ALT; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0;
+        if (theEnemy.NAME.Contains("Spider")) { currentWeaponScore = 69; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Giant Enemy Bugspray
+        currentWeaponScore = theLocation.WND_SPD + 2; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Market Gardener
+        if (theHero.WGT < 1) { currentWeaponScore = 85; } if (theLocation.ALT < 0) { currentWeaponScore += 31; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Rock
+        if (theEnemy.DEF <= 3) { currentWeaponScore = 61; } if (theLocation.TMP > 10) { currentWeaponScore += 65; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Paper
+        if (theHero.LDN >= 70) { currentWeaponScore = 21; } if (theEnemy.HP >= 0.1f) { currentWeaponScore += 99; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Scissors
+        if (theHero.RDA > 99) { currentWeaponScore = 67; } if (theHero.ORG_LONG < 0) { currentWeaponScore += 54; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Lizard
+        if (theHero.WGT < 60) { currentWeaponScore = 47; } if (theHero.ORG_LAT < 0) { currentWeaponScore += 81; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Spock
+        currentWeaponScore = 100 - theLocation.TMP; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Firey Fist O' Pain
+        currentWeaponScore = 25 * theEnemy.NAME.Count(Char.IsWhiteSpace); weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Sand gun
+        if (theEnemy.NAME == "stick bug lol") { currentWeaponScore = 50; } if (theHero.NAME == "HOW") { currentWeaponScore += 50; } if (theLocation.NAME == "place go brrrr") { currentWeaponScore += 50; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Laughter
+        currentWeaponScore = theHero.ORG_LAT + theHero.ORG_LONG; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Anonymous Monsplode
+        currentWeaponScore = 100 * theEnemy.HP; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Bed
+        currentWeaponScore = 10 * theHero.HGT; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //T-Posing Godzilla
+        currentWeaponScore = theLocation.PRC; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Water Staff Thing
+        for (int i = 0; i < theLocation.NAME.Length; i++) { if (Char.ToLower(theLocation.NAME[i])  == 'a' || Char.ToLower(theLocation.NAME[i]) == 'e' || Char.ToLower(theLocation.NAME[i]) == 'i' || Char.ToLower(theLocation.NAME[i]) == 'o' || Char.ToLower(theLocation.NAME[i]) == 'u') { currentWeaponScore += 10; }} weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Argonian Dictionary
+        currentWeaponScore = theHero.AGE * theHero.HGT; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //DISTRACT
+        currentWeaponScore = theHero.HGT + theHero.WGT + theHero.AGE + theHero.LDN + theHero.RDA; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Mine Turtle
+        currentWeaponScore = theHero.NAME.Length * 7; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Markscript
+        currentWeaponScore = theEnemy.INT + theEnemy.PWR + theEnemy.DEF + theEnemy.MBL + theEnemy.HP + theEnemy.STL; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Tylerwon
+        for (int i = 0; i < theEnemy.NAME.Length; i++) { if (Char.ToLower(theEnemy.NAME[i])  == 'a' || Char.ToLower(theEnemy.NAME[i]) == 'b' || Char.ToLower(theEnemy.NAME[i]) == 'c' || Char.ToLower(theEnemy.NAME[i]) == 'd' || Char.ToLower(theEnemy.NAME[i]) == 'e' || Char.ToLower(theEnemy.NAME[i]) == 'f' || Char.ToLower(theEnemy.NAME[i]) == 'g' || Char.ToLower(theEnemy.NAME[i]) == 'h' || Char.ToLower(theEnemy.NAME[i]) == 'i' || Char.ToLower(theEnemy.NAME[i]) == 'j' || Char.ToLower(theEnemy.NAME[i]) == 'k' || Char.ToLower(theEnemy.NAME[i]) == 'l' || Char.ToLower(theEnemy.NAME[i]) == 'm' || Char.ToLower(theEnemy.NAME[i]) == 'n' || Char.ToLower(theEnemy.NAME[i]) == 'o' || Char.ToLower(theEnemy.NAME[i]) == 'p' || Char.ToLower(theEnemy.NAME[i]) == 'q' || Char.ToLower(theEnemy.NAME[i]) == 'r' || Char.ToLower(theEnemy.NAME[i]) == 's' || Char.ToLower(theEnemy.NAME[i]) == 't' || Char.ToLower(theEnemy.NAME[i]) == 'u' || Char.ToLower(theEnemy.NAME[i]) == 'v' || Char.ToLower(theEnemy.NAME[i]) == 'w' || Char.ToLower(theEnemy.NAME[i]) == 'x' || Char.ToLower(theEnemy.NAME[i]) == 'y' || Char.ToLower(theEnemy.NAME[i]) == 'z') { currentWeaponScore += 5; }} weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Gun Sand
+        currentWeaponScore = theEnemy.DEF * 25; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Trumpet
+        if (theEnemy.STL < 10) { currentWeaponScore = 89; } if (theEnemy.STL > 1000) { currentWeaponScore = 121; } weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Creep
+        currentWeaponScore = theLocation.ALT - theLocation.HUM; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Pineapple
+        currentWeaponScore = theHero.AGE - 87; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Mrgrt Thtchr
+        currentWeaponScore = theLocation.TMP + theLocation.HUM + theLocation.PSI + theLocation.WND_DIR + theLocation.WND_SPD + theLocation.PRC + theLocation.ALT; weaponScores.Add(currentWeaponScore); currentWeaponScore = 0; //Bunni
 
         Weapon weapon0= new Weapon("Giant Enemy Bugspray", weaponScores[0]);
         Weapon weapon1= new Weapon("Market Gardener", weaponScores[1]);
@@ -853,7 +853,7 @@ public class consoleScript : MonoBehaviour {
                     }
                     if (i != parameters.Length - 1)
                     {
-                        handleKey(' '); 
+                        handleKey(' ');
                         yield return new WaitForSeconds(0.1f);
                     }
                 }
